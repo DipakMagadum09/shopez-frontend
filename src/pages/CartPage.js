@@ -40,7 +40,6 @@ const CartPage = () => {
 
   return (
     <div className="cart-page">
-      {/* Cart Items */}
       <div className="cart-items">
         {cart.map((item) => {
           if (!item.productId) return null;
@@ -54,7 +53,8 @@ const CartPage = () => {
               <div className="cart-item-info">
                 <h3>{item.productId.name}</h3>
                 <p>{item.productId.description?.substring(0, 80)}...</p>
-                <p><strong>Size:</strong> {item.size || 'N/A'} &nbsp; <strong>Quantity:</strong> {item.quantity}</p>
+                <p><strong>Size:</strong> {item.size || 'N/A'} &nbsp;
+                <strong>Quantity:</strong> {item.quantity}</p>
                 <p><strong>Price: ₹{item.productId.price.toLocaleString()}</strong></p>
                 <button className="remove-btn" onClick={() => handleRemove(item.productId._id)}>
                   Remove
@@ -65,7 +65,6 @@ const CartPage = () => {
         })}
       </div>
 
-      {/* Price Summary */}
       <div className="cart-summary">
         <h3>PRICE DETAILS</h3>
         <div className="summary-row">
