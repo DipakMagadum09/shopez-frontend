@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
 import ProductCard from '../components/ProductCard';
+import api from '../utils/api';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [filters, setFilters] = useState({
     sortBy: 'popular',
@@ -24,7 +24,7 @@ const ProductsPage = () => {
       if (filters.search) params.append('search', filters.search);
       if (filters.sortBy && filters.sortBy !== 'popular') params.append('sortBy', filters.sortBy);
 
-      const res = await axios.get(`/api/products?${params.toString()}`);
+      const res = await api.get(`/products?${params.toString()}`);
       setProducts(res.data);
     } catch (err) {
       console.error(err);
@@ -37,19 +37,17 @@ const ProductsPage = () => {
   }, [filters]);
 
   useEffect(() => {
-    setFilters(f => ({ ...f, category: searchParams.get('category') || '', search: searchParams.get('search') || '' }));
+    setFilters(f => ({
+      ...f,
+      category: searchParams.get('category') || '',
+      search: searchParams.get('search') || ''
+    }));
   }, [searchParams]);
-
-  const handleSortChange = (val) => setFilters(f => ({ ...f, sortBy: val }));
-  const handleCategoryChange = (val) => setFilters(f => ({ ...f, category: f.category === val ? '' : val }));
-  const handleGenderChange = (val) => setFilters(f => ({ ...f, gender: f.gender === val ? '' : val }));
 
   return (
     <div className="products-page">
-      {/* Filters Sidebar */}
       <div className="filters-sidebar">
         <h3>Filters</h3>
-
         <div className="filter-group">
           <h4>Sort By</h4>
           {[
@@ -63,7 +61,7 @@ const ProductsPage = () => {
                 type="radio"
                 name="sort"
                 checked={filters.sortBy === opt.value}
-                onChange={() => handleSortChange(opt.value)}
+                onChange={() => setFilters(f => ({ ...f, sortBy: opt.value }))}
               />
               {opt.label}
             </label>
@@ -77,7 +75,7 @@ const ProductsPage = () => {
               <input
                 type="checkbox"
                 checked={filters.category === cat}
-                onChange={() => handleCategoryChange(cat)}
+                onChange={() => setFilters(f => ({ ...f, category: f.category === cat ? '' : cat }))}
               />
               {cat.charAt(0).toUpperCase() + cat.slice(1).replace('-', ' ')}
             </label>
@@ -91,7 +89,7 @@ const ProductsPage = () => {
               <input
                 type="checkbox"
                 checked={filters.gender === g}
-                onChange={() => handleGenderChange(g)}
+                onChange={() => setFilters(f => ({ ...f, gender: f.gender === g ? '' : g }))}
               />
               {g.charAt(0).toUpperCase() + g.slice(1)}
             </label>
@@ -99,7 +97,6 @@ const ProductsPage = () => {
         </div>
       </div>
 
-      {/* Products Grid */}
       <div className="products-main">
         <h2>All Products</h2>
         {loading ? (
