@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import api from '../utils/api';
 
 const ProfilePage = () => {
   const { user, token, logout } = useAuth();
@@ -13,7 +13,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('/api/orders/my-orders', {
+        const res = await api.get('/orders/my-orders', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setOrders(res.data);
@@ -27,7 +27,7 @@ const ProfilePage = () => {
 
   const handleCancel = async (orderId) => {
     try {
-      await axios.delete(`/api/orders/${orderId}`, {
+      await api.delete(`/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOrders(orders.filter(o => o._id !== orderId));
@@ -44,7 +44,6 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page">
-      {/* Sidebar */}
       <div className="profile-sidebar">
         <h3>Username: {user?.username}</h3>
         <p>Email: {user?.email}</p>
@@ -52,7 +51,6 @@ const ProfilePage = () => {
         <button className="btn-logout" onClick={handleLogout}>Logout</button>
       </div>
 
-      {/* Orders */}
       <div className="profile-orders">
         <h2>Orders</h2>
         {loading ? (
@@ -79,7 +77,7 @@ const ProfilePage = () => {
                   <strong>Size:</strong> {order.size} &nbsp;
                   <strong>Quantity:</strong> {order.quantity} &nbsp;
                   <strong>Price: ₹{order.price}</strong> &nbsp;
-                  <strong>Payment method:</strong> {order.paymentMethod}
+                  <strong>Payment:</strong> {order.paymentMethod}
                 </p>
                 <p>
                   <strong>Address:</strong> {order.address} &nbsp;
