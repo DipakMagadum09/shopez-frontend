@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: "https://shopez-backend-wokv.onrender.com/api"
 });
 
 export const setAuthToken = (token) => {
