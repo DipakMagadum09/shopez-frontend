@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import api from '../utils/api';
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -14,7 +14,7 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/login', form);
+      const res = await api.post('/auth/login', form);
       login(res.data.user, res.data.token);
       toast.success('Login successful!');
       if (res.data.user.userType === 'admin') {
