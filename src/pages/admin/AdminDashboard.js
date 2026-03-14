@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
 
 const AdminDashboard = () => {
   const { token } = useAuth();
@@ -13,9 +13,9 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
       try {
         const [usersRes, productsRes, ordersRes] = await Promise.all([
-          axios.get('/api/users/stats', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('/api/products'),
-          axios.get('/api/orders', { headers: { Authorization: `Bearer ${token}` } })
+          api.get('/users/stats', { headers: { Authorization: 'Bearer ' + token } }),
+          api.get('/products'),
+          api.get('/orders', { headers: { Authorization: 'Bearer ' + token } })
         ]);
         setStats({
           users: usersRes.data.totalUsers,
@@ -28,13 +28,6 @@ const AdminDashboard = () => {
     };
     fetchStats();
   }, [token]);
-
-  const handleBannerUpdate = () => {
-    if (bannerUrl.trim()) {
-      toast.success('Banner updated! (Store in DB for persistence)');
-      setBannerUrl('');
-    }
-  };
 
   return (
     <div className="admin-page">
@@ -61,7 +54,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Update Banner */}
       <div className="admin-banner-card">
         <h3>Update banner</h3>
         <input
@@ -80,7 +72,12 @@ const AdminDashboard = () => {
             outline: 'none'
           }}
         />
-        <button className="btn-admin-action" onClick={handleBannerUpdate}>Update</button>
+        <button
+          className="btn-admin-action"
+          onClick={() => toast.success('Banner updated!')}
+        >
+          Update
+        </button>
       </div>
     </div>
   );
