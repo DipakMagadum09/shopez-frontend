@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import api from '../utils/api';
 
 const CheckoutPage = () => {
   const { user, token } = useAuth();
@@ -28,7 +28,7 @@ const CheckoutPage = () => {
     try {
       for (const item of cart) {
         if (!item.productId) continue;
-        await axios.post('/api/orders', {
+        await api.post('/orders', {
           productId: item.productId._id,
           quantity: item.quantity,
           size: item.size,
@@ -38,7 +38,7 @@ const CheckoutPage = () => {
           pincode: form.pincode,
           userMobile: form.mobile
         }, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: 'Bearer ' + token }
         });
       }
       await clearCart();
@@ -53,23 +53,20 @@ const CheckoutPage = () => {
   return (
     <div className="checkout-page">
       <h2>Checkout</h2>
-
-      {/* Order Summary */}
       <div style={{ background: 'white', borderRadius: '8px', padding: '15px 20px', marginBottom: '20px' }}>
         <h3 style={{ marginBottom: '10px' }}>Order Summary ({cart.length} items)</h3>
         {cart.map(item => item.productId && (
           <div key={item._id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px' }}>
             <span>{item.productId.name} x{item.quantity}</span>
-            <span>₹{(item.productId.price * item.quantity).toLocaleString()}</span>
+            <span>Rs.{(item.productId.price * item.quantity).toLocaleString()}</span>
           </div>
         ))}
         <div style={{ borderTop: '2px solid #eee', paddingTop: '10px', marginTop: '10px', display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
           <span>Total:</span>
-          <span>₹{totalPrice.toLocaleString()}</span>
+          <span>Rs.{totalPrice.toLocaleString()}</span>
         </div>
       </div>
 
-      {/* Delivery Form */}
       <div className="checkout-form">
         <h3 style={{ marginBottom: '20px' }}>Delivery Details</h3>
         <form onSubmit={handlePlaceOrder}>
@@ -118,7 +115,7 @@ const CheckoutPage = () => {
             </select>
           </div>
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Placing Order...' : `Place Order - ₹${totalPrice.toLocaleString()}`}
+            {loading ? 'Placing Order...' : 'Place Order - Rs.' + totalPrice.toLocaleString()}
           </button>
         </form>
       </div>
