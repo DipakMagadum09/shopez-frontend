@@ -42,7 +42,7 @@ const Navbar = () => {
             </Link>
           </>
         ) : (
-          <Link to="/login" className="navbar-btn">Login</Link>
+         <Link to="/login" style={{ color: 'white', textDecoration: 'none', background: 'transparent', border: '1px solid white', padding: '6px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600' }}>Login</Link>
         )}
       </div>
     </nav>
