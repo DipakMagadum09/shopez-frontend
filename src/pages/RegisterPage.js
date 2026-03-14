@@ -74,7 +74,7 @@ const RegisterPage = () => {
               onChange={(e) => setForm({ ...form, userType: e.target.value })}
             >
               <option value="">User type</option>
-              <option value="admin">Admin</option>
+              //<option value="admin">Admin</option>
               <option value="customer">Customer</option>
             </select>
           </div>
