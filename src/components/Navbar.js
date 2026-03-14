@@ -12,8 +12,13 @@ const Navbar = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+      navigate('/products?search=' + encodeURIComponent(searchQuery));
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -33,6 +38,9 @@ const Navbar = () => {
       <div className="navbar-actions">
         {user ? (
           <>
+            <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '14px', border: '1px solid white', padding: '6px 12px', borderRadius: '4px' }}>
+              Home
+            </Link>
             <Link to="/profile" style={{ color: 'white', textDecoration: 'none', fontSize: '14px' }}>
               👤 {user.username}
             </Link>
@@ -42,7 +50,14 @@ const Navbar = () => {
             </Link>
           </>
         ) : (
-         <Link to="/login" style={{ color: 'white', textDecoration: 'none', background: 'transparent', border: '1px solid white', padding: '6px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600' }}>Login</Link>
+          <>
+            <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '14px', border: '1px solid white', padding: '6px 12px', borderRadius: '4px' }}>
+              Home
+            </Link>
+            <Link to="/login" style={{ color: 'white', textDecoration: 'none', background: 'transparent', border: '1px solid white', padding: '6px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600' }}>
+              Login
+            </Link>
+          </>
         )}
       </div>
     </nav>
