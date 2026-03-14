@@ -47,8 +47,7 @@ const ProductDetailPage = () => {
   if (!product) return <div className="loading">Product not found</div>;
 
   const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-  const allImages = [product.thumbnailImg, ...product.images].filter(Boolean);
-
+ const allImages = [product.thumbnailImg, ...(product.images || [])].filter(Boolean);
   return (
     <div className="product-detail">
       <div className="product-detail-images">
