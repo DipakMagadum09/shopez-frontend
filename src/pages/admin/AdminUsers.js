@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
 
 const AdminUsers = () => {
   const { token } = useAuth();
@@ -10,8 +10,8 @@ const AdminUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get('/api/users', {
-          headers: { Authorization: `Bearer ${token}` }
+        const res = await api.get('/users', {
+          headers: { Authorization: 'Bearer ' + token }
         });
         setUsers(res.data);
       } catch (err) {
