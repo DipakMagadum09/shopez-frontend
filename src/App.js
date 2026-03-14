@@ -4,11 +4,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
-// Context
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 
-// Pages
 import LandingPage from './pages/LandingPage';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -18,16 +16,15 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import CheckoutPage from './pages/CheckoutPage';
 
-// Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 import NewProduct from './pages/admin/NewProduct';
 
-// Components
 import Navbar from './components/Navbar';
 import AdminNavbar from './components/AdminNavbar';
+import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
@@ -38,17 +35,14 @@ function App() {
         <Router>
           <ToastContainer position="top-right" autoClose={3000} />
           <Routes>
-            {/* Customer Routes */}
-            <Route path="/" element={<><Navbar /><LandingPage /></>} />
-            <Route path="/products" element={<><Navbar /><ProductsPage /></>} />
-            <Route path="/products/:id" element={<><Navbar /><ProductDetailPage /></>} />
-            <Route path="/login" element={<><Navbar /><LoginPage /></>} />
-            <Route path="/register" element={<><Navbar /><RegisterPage /></>} />
-            <Route path="/cart" element={<ProtectedRoute><Navbar /><CartPage /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Navbar /><ProfilePage /></ProtectedRoute>} />
-            <Route path="/checkout" element={<ProtectedRoute><Navbar /><CheckoutPage /></ProtectedRoute>} />
-
-            {/* Admin Routes */}
+            <Route path="/" element={<><Navbar /><LandingPage /><Footer /></>} />
+            <Route path="/products" element={<><Navbar /><ProductsPage /><Footer /></>} />
+            <Route path="/products/:id" element={<><Navbar /><ProductDetailPage /><Footer /></>} />
+            <Route path="/login" element={<><Navbar /><LoginPage /><Footer /></>} />
+            <Route path="/register" element={<><Navbar /><RegisterPage /><Footer /></>} />
+            <Route path="/cart" element={<ProtectedRoute><Navbar /><CartPage /><Footer /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Navbar /><ProfilePage /><Footer /></ProtectedRoute>} />
+            <Route path="/checkout" element={<ProtectedRoute><Navbar /><CheckoutPage /><Footer /></ProtectedRoute>} />
             <Route path="/admin" element={<AdminRoute><AdminNavbar /><AdminDashboard /></AdminRoute>} />
             <Route path="/admin/products" element={<AdminRoute><AdminNavbar /><AdminProducts /></AdminRoute>} />
             <Route path="/admin/orders" element={<AdminRoute><AdminNavbar /><AdminOrders /></AdminRoute>} />
