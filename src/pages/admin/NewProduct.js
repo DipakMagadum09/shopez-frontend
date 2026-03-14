@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
 
 const NewProduct = () => {
   const { token } = useAuth();
@@ -20,12 +20,14 @@ const NewProduct = () => {
   });
 
   const handleSizeToggle = (size) => {
-    setForm(f => ({
-      ...f,
-      availableSizes: f.availableSizes.includes(size)
-        ? f.availableSizes.filter(s => s !== size)
-        : [...f.availableSizes, size]
-    }));
+    setForm(function(f) {
+      return {
+        ...f,
+        availableSizes: f.availableSizes.includes(size)
+          ? f.availableSizes.filter(function(s) { return s !== size; })
+          : [...f.availableSizes, size]
+      };
+    });
   };
 
   const handleImageChange = (index, value) => {
@@ -39,14 +41,19 @@ const NewProduct = () => {
     setLoading(true);
     try {
       const productData = {
-        ...form,
+        name: form.name,
+        description: form.description,
         price: Number(form.price),
         originalPrice: Number(form.originalPrice),
-        stock: Number(form.stock),
-        images: form.images.filter(img => img.trim() !== '')
+        thumbnailImg: form.thumbnailImg,
+        images: form.images.filter(function(img) { return img.trim() !== ''; }),
+        category: form.category,
+        gender: form.gender,
+        availableSizes: form.availableSizes,
+        stock: Number(form.stock)
       };
-      await axios.post('/api/products', productData, {
-        headers: { Authorization: `Bearer ${token}` }
+      await api.post('/products', productData, {
+        headers: { Authorization: 'Bearer ' + token }
       });
       toast.success('Product added successfully!');
       setForm({
@@ -55,7 +62,7 @@ const NewProduct = () => {
         gender: 'unisex', availableSizes: [], stock: 10
       });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to add product');
+      toast.error(err.response && err.response.data ? err.response.data.message : 'Failed to add product');
     }
     setLoading(false);
   };
@@ -71,7 +78,7 @@ const NewProduct = () => {
                 type="text"
                 placeholder="Product name"
                 value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onChange={function(e) { setForm({ ...form, name: e.target.value }); }}
                 required
               />
             </div>
@@ -80,7 +87,7 @@ const NewProduct = () => {
                 type="text"
                 placeholder="Product Description"
                 value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                onChange={function(e) { setForm({ ...form, description: e.target.value }); }}
                 required
               />
             </div>
@@ -91,37 +98,41 @@ const NewProduct = () => {
               type="text"
               placeholder="Thumbnail Img url"
               value={form.thumbnailImg}
-              onChange={(e) => setForm({ ...form, thumbnailImg: e.target.value })}
+              onChange={function(e) { setForm({ ...form, thumbnailImg: e.target.value }); }}
               required
             />
           </div>
 
           <div className="form-row-3">
-            {form.images.map((img, i) => (
-              <div className="form-group" key={i}>
-                <input
-                  type="text"
-                  placeholder={`Add on img${i + 1} url`}
-                  value={img}
-                  onChange={(e) => handleImageChange(i, e.target.value)}
-                />
-              </div>
-            ))}
+            {form.images.map(function(img, i) {
+              return (
+                <div className="form-group" key={i}>
+                  <input
+                    type="text"
+                    placeholder={'Add on img' + (i + 1) + ' url'}
+                    value={img}
+                    onChange={function(e) { handleImageChange(i, e.target.value); }}
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <div className="form-group">
             <label style={{ color: '#ccc', fontWeight: 600 }}>Available Size</label>
             <div className="size-checkboxes" style={{ marginTop: '8px' }}>
-              {['S', 'M', 'L', 'XL'].map(size => (
-                <label key={size} className="size-checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={form.availableSizes.includes(size)}
-                    onChange={() => handleSizeToggle(size)}
-                  />
-                  {size}
-                </label>
-              ))}
+              {['S', 'M', 'L', 'XL'].map(function(size) {
+                return (
+                  <label key={size} className="size-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={form.availableSizes.includes(size)}
+                      onChange={function() { handleSizeToggle(size); }}
+                    />
+                    {size}
+                  </label>
+                );
+              })}
             </div>
           </div>
 
@@ -129,7 +140,7 @@ const NewProduct = () => {
             <label style={{ color: '#ccc', fontWeight: 600 }}>Gender</label>
             <select
               value={form.gender}
-              onChange={(e) => setForm({ ...form, gender: e.target.value })}
+              onChange={function(e) { setForm({ ...form, gender: e.target.value }); }}
               style={{ marginTop: '8px' }}
             >
               <option value="men">Men</option>
@@ -144,7 +155,7 @@ const NewProduct = () => {
                 type="number"
                 placeholder="Price (discounted)"
                 value={form.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value })}
+                onChange={function(e) { setForm({ ...form, price: e.target.value }); }}
                 required
               />
             </div>
@@ -153,7 +164,7 @@ const NewProduct = () => {
                 type="number"
                 placeholder="Original Price (MRP)"
                 value={form.originalPrice}
-                onChange={(e) => setForm({ ...form, originalPrice: e.target.value })}
+                onChange={function(e) { setForm({ ...form, originalPrice: e.target.value }); }}
                 required
               />
             </div>
@@ -163,7 +174,7 @@ const NewProduct = () => {
             <div className="form-group">
               <select
                 value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
+                onChange={function(e) { setForm({ ...form, category: e.target.value }); }}
                 required
               >
                 <option value="">Select Category</option>
@@ -179,7 +190,7 @@ const NewProduct = () => {
                 type="number"
                 placeholder="Stock"
                 value={form.stock}
-                onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                onChange={function(e) { setForm({ ...form, stock: e.target.value }); }}
               />
             </div>
           </div>
