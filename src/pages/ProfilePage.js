@@ -14,11 +14,17 @@ const ProfilePage = () => {
     const fetchOrders = async () => {
       try {
         const res = await api.get('/orders/my-orders', {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: 'Bearer ' + token }
         });
-        setOrders(res.data);
+        const data = res.data;
+        if (Array.isArray(data)) {
+          setOrders(data);
+        } else {
+          setOrders([]);
+        }
       } catch (err) {
         console.error(err);
+        setOrders([]);
       }
       setLoading(false);
     };
@@ -27,8 +33,8 @@ const ProfilePage = () => {
 
   const handleCancel = async (orderId) => {
     try {
-      await api.delete(`/orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+      await api.delete('/orders/' + orderId, {
+        headers: { Authorization: 'Bearer ' + token }
       });
       setOrders(orders.filter(o => o._id !== orderId));
       toast.success('Order cancelled');
@@ -71,19 +77,10 @@ const ProfilePage = () => {
                 />
               )}
               <div className="order-info">
-                <h3>{order.productId?.name || 'Product'}</h3>
-                <p>{order.productId?.description?.substring(0, 80)}...</p>
-                <p>
-                  <strong>Size:</strong> {order.size} &nbsp;
-                  <strong>Quantity:</strong> {order.quantity} &nbsp;
-                  <strong>Price: ₹{order.price}</strong> &nbsp;
-                  <strong>Payment:</strong> {order.paymentMethod}
-                </p>
-                <p>
-                  <strong>Address:</strong> {order.address} &nbsp;
-                  <strong>Pincode:</strong> {order.pincode} &nbsp;
-                  <strong>Ordered on:</strong> {new Date(order.createdAt).toLocaleDateString()}
-                </p>
+                <h3>{order.productId ? order.productId.name : 'Product'}</h3>
+                <p>Size: {order.size} &nbsp; Quantity: {order.quantity} &nbsp; Price: Rs.{order.price}</p>
+                <p>Address: {order.address} &nbsp; Pincode: {order.pincode}</p>
+                <p>Ordered on: {new Date(order.createdAt).toLocaleDateString()}</p>
                 <p className="order-status">Order status: {order.orderStatus}</p>
                 {order.orderStatus !== 'delivered' && order.orderStatus !== 'cancelled' && (
                   <button className="btn-cancel" onClick={() => handleCancel(order._id)}>
